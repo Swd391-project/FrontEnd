@@ -7,7 +7,7 @@ import DefaultButton from "../button";
 
 import { Court } from "../../constants/types/court";
 
-import { RootStackParamList } from "../../constants/types/rootStack";
+import { RootStackParamList } from "../../constants/types/root-stack";
 
 type CourtCardProps = {
   court: Court;

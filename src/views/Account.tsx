@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 
-import TextInputComponent from "../components/TextInput";
+import TextInputComponent from "../components/text-input";
 import DefaultButton from "../components/button";
 
 const Account = () => {

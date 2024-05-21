@@ -3,11 +3,11 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { PaperProvider } from "react-native-paper";
 
-import HomeScreen from "./src/components/BottomTab";
-import CourtDetail from "./src/views/CourtDetail";
-import AppBar from "./src/components/AppBar";
+import HomeScreen from "./src/components/bottom-tab";
+import CourtDetail from "./src/views/court-detail";
+import AppBar from "./src/components/app-bar";
 
-import { RootStackParamList } from "./src/constants/types/rootStack";
+import { RootStackParamList } from "./src/constants/types/root-stack";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 

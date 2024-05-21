@@ -1,8 +1,8 @@
 import * as React from "react";
 import { BottomNavigation, Text } from "react-native-paper";
 
-import Home from "../../views/Home";
-import Account from "../../views/Account";
+import Home from "../../views/home";
+import Account from "../../views/account";
 import Screen2 from "../../views/Screen2";
 
 const HomeScreen = () => {
