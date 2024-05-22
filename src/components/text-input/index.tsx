@@ -4,7 +4,7 @@ import { TextInput } from "react-native-paper";
 type textInputProp = {
   label: string;
 };
-const TextInputComponent = ({ label }: textInputProp) => {
+export default function TextInputComponent({ label }: textInputProp) {
   const [text, setText] = React.useState("");
 
   return (
@@ -15,6 +15,4 @@ const TextInputComponent = ({ label }: textInputProp) => {
       onChangeText={(text) => setText(text)}
     />
   );
-};
-
-export default TextInputComponent;
+}

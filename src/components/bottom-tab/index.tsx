@@ -3,9 +3,8 @@ import { BottomNavigation, Text } from "react-native-paper";
 
 import Home from "../../views/home";
 import Account from "../../views/account";
-import Screen2 from "../../views/Screen2";
 
-const HomeScreen = () => {
+export default function BottomTab() {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {
@@ -27,5 +26,4 @@ const HomeScreen = () => {
       renderScene={renderScene}
     />
   );
-};
-export default HomeScreen;
+}

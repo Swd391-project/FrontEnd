@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
@@ -23,18 +23,22 @@ export default function BadmintonCourtCard({ court }: CourtCardProps) {
 
   return (
     <View className="bg-white p-5 m-2 rounded-lg shadow-sm">
-      <Text className="text-lg font-bold">{court.name}</Text>
-      <Text className="text-base text-gray-600 my-1">{court.location}</Text>
-      <Text className="text-sm text-gray-700">Rating: {court.rating}</Text>
-      <Text className="text-base text-gray-600 my-1">
-        Trạng thái: {court.status}
-      </Text>
-      <Text className="text-sm text-gray-700">
-        Số điện thoại: {court.phone}
-      </Text>
-      <DefaultButton
-        title="Đặt lịch"
+      <TouchableOpacity
         onPress={() => navigation.navigate("CourtDetail", { court })}
+      >
+        <Text className="text-lg font-bold">{court.name}</Text>
+        <Text className="text-base text-gray-600 my-1">{court.location}</Text>
+        <Text className="text-sm text-gray-700">Rating: {court.rating}</Text>
+        <Text className="text-base text-gray-600 my-1">
+          Trạng thái: {court.status}
+        </Text>
+        <Text className="text-sm text-gray-700">
+          Số điện thoại: {court.phone}
+        </Text>
+      </TouchableOpacity>
+      <DefaultButton
+        onPress={() => navigation.navigate("UserBooking", { court })}
+        title="Đặt lịch"
       />
     </View>
   );

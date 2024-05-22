@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import { Appbar } from "react-native-paper";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 
-import SearchInput from "../TextInput/sreachBar";
+import SearchInput from "../text-input/sreach-bar";
 
-const AppBar = ({ options, navigation, route }: NativeStackHeaderProps) => {
+export default function AppBar({
+  options,
+  navigation,
+  route,
+}: NativeStackHeaderProps) {
   const title = options.headerTitle ?? route.name;
   const [isSearch, setIsSearch] = useState(false);
 
@@ -24,6 +28,4 @@ const AppBar = ({ options, navigation, route }: NativeStackHeaderProps) => {
       {isSearch && <SearchInput />}
     </>
   );
-};
-
-export default AppBar;
+}

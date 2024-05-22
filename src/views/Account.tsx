@@ -3,7 +3,7 @@ import { Text, View } from "react-native";
 import TextInputComponent from "../components/text-input";
 import DefaultButton from "../components/button";
 
-const Account = () => {
+export default function Account() {
   return (
     <View className="flex-1 ">
       <Text className="text-2xl font-bold text-brown-700 items-center">
@@ -18,5 +18,4 @@ const Account = () => {
       </View>
     </View>
   );
-};
-export default Account;
+}

@@ -3,8 +3,9 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { PaperProvider } from "react-native-paper";
 
-import HomeScreen from "./src/components/bottom-tab";
+import BottomTab from "./src/components/bottom-tab";
 import CourtDetail from "./src/views/court-detail";
+import UserBooking from "./src/views/user-boking";
 import AppBar from "./src/components/app-bar";
 
 import { RootStackParamList } from "./src/constants/types/root-stack";
@@ -21,8 +22,9 @@ export default function App() {
             header: (props) => <AppBar {...props} />,
           }}
         >
-          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Home" component={BottomTab} />
           <Stack.Screen name="CourtDetail" component={CourtDetail} />
+          <Stack.Screen name="UserBooking" component={UserBooking} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>

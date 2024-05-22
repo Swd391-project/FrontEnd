@@ -20,7 +20,7 @@ const badmintonCourts = [
     price: 1000000,
   },
 ];
-const Home = () => {
+export default function Home() {
   return (
     <View className="flex-1">
       {badmintonCourts.map((court, index) => (
@@ -28,5 +28,4 @@ const Home = () => {
       ))}
     </View>
   );
-};
-export default Home;
+}

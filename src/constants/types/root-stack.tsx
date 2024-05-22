@@ -5,4 +5,5 @@ export type RootStackParamList = {
   CourtDetail: {
     court: Court;
   };
+  UserBooking: { court: Court };
 };
