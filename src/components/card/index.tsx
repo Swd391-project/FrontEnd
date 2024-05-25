@@ -6,7 +6,6 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import DefaultButton from "../button";
 
 import { Court } from "../../constants/types/court";
-
 import { RootStackParamList } from "../../constants/types/root-stack";
 
 type CourtCardProps = {
@@ -28,10 +27,6 @@ export default function BadmintonCourtCard({ court }: CourtCardProps) {
       >
         <Text className="text-lg font-bold">{court.name}</Text>
         <Text className="text-base text-gray-600 my-1">{court.location}</Text>
-        <Text className="text-sm text-gray-700">Rating: {court.rating}</Text>
-        <Text className="text-base text-gray-600 my-1">
-          Trạng thái: {court.status}
-        </Text>
         <Text className="text-sm text-gray-700">
           Số điện thoại: {court.phone}
         </Text>

@@ -1,0 +1,46 @@
+import React from "react";
+import { Pressable, Text, Image, View } from "react-native";
+
+import formatCurrency from "../../helpers/price-format";
+
+import { Yard } from "../../constants/types/yard";
+
+export type YardButtonProps = {
+  yard: Yard;
+  timeSelected: boolean;
+  onSelect: (yard: Yard) => void;
+  isSelected: boolean;
+};
+
+export default function YardButton({
+  yard,
+  timeSelected,
+  onSelect,
+  isSelected,
+}: YardButtonProps) {
+  const formattedPrice = formatCurrency(yard.price);
+
+  const handlePress = () => {
+    onSelect(yard);
+  };
+
+  return (
+    <Pressable
+      onPress={handlePress}
+      disabled={!timeSelected}
+      className={`items-center justify-center ${
+        timeSelected ? "" : "opacity-50"
+      }`}
+    >
+      <Image source={require("../../../assets/badminton-yard.png")} />
+      <View
+        className={`w-10 h-10 rounded-full bg-${isSelected ? "purple-700" : "white"} flex items-center justify-center absolute`}
+      >
+        <Text className={`text-${isSelected ? "white" : "gray"}`}>
+          {yard.yardNumber}
+        </Text>
+      </View>
+      <Text>{formattedPrice}</Text>
+    </Pressable>
+  );
+}

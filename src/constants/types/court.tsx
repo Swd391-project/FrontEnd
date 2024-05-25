@@ -1,3 +1,5 @@
+import { Yard } from "./yard";
+
 export type Court = {
   name: string;
   location: string;
@@ -5,4 +7,5 @@ export type Court = {
   price: number;
   rating: number;
   phone: string;
+  numberOfYard: Yard[];
 };
