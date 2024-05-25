@@ -1,11 +1,10 @@
 import * as React from "react";
-import { BottomNavigation, Text } from "react-native-paper";
+import { BottomNavigation } from "react-native-paper";
 
-import Home from "../../views/Home";
-import Account from "../../views/Account";
-import Screen2 from "../../views/Screen2";
+import Home from "../../views/home";
+import Account from "../../views/account";
 
-const HomeScreen = () => {
+export default function BottomTab() {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {
@@ -27,5 +26,4 @@ const HomeScreen = () => {
       renderScene={renderScene}
     />
   );
-};
-export default HomeScreen;
+}

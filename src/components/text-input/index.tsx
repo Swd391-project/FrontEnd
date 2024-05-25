@@ -1,11 +1,11 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { TextInput } from "react-native-paper";
 
 type textInputProp = {
   label: string;
 };
-const TextInputComponent = ({ label }: textInputProp) => {
-  const [text, setText] = React.useState("");
+export default function TextInputComponent({ label }: textInputProp) {
+  const [text, setText] = useState("");
 
   return (
     <TextInput
@@ -15,6 +15,4 @@ const TextInputComponent = ({ label }: textInputProp) => {
       onChangeText={(text) => setText(text)}
     />
   );
-};
-
-export default TextInputComponent;
+}

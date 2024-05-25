@@ -1,4 +1,5 @@
 import { View } from "react-native";
+import { ScrollView } from "react-native";
 
 import BadmintonCourtCard from "../components/card";
 
@@ -10,6 +11,11 @@ const badmintonCourts = [
     status: "ok",
     phone: "+84 28 3855 3030",
     price: 1000000,
+    numberOfYard: [
+      { id: "yard1", price: 100000, yardNumber: 1 },
+      { id: "yard2", price: 120000, yardNumber: 2 },
+      { id: "yard3", price: 150000, yardNumber: 3 },
+    ],
   },
   {
     name: "Sân Cầu Lông Tân Bình",
@@ -18,15 +24,21 @@ const badmintonCourts = [
     status: "Không ok",
     phone: "+84 28 3811 1111",
     price: 1000000,
+    numberOfYard: [
+      { id: "yard1", price: 100000, yardNumber: 1 },
+      { id: "yard2", price: 120000, yardNumber: 2 },
+      { id: "yard3", price: 150000, yardNumber: 3 },
+    ],
   },
 ];
-const Home = () => {
+export default function Home() {
   return (
-    <View className="flex-1">
-      {badmintonCourts.map((court, index) => (
-        <BadmintonCourtCard key={index} court={court} />
-      ))}
-    </View>
+    <ScrollView>
+      <View className="flex-1">
+        {badmintonCourts.map((court, index) => (
+          <BadmintonCourtCard key={index} court={court} />
+        ))}
+      </View>
+    </ScrollView>
   );
-};
-export default Home;
+}

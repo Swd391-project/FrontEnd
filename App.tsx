@@ -2,12 +2,18 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { PaperProvider } from "react-native-paper";
+import { NativeWindStyleSheet } from "nativewind";
 
-import HomeScreen from "./src/components/BottomTab";
-import CourtDetail from "./src/views/CourtDetail";
-import AppBar from "./src/components/AppBar";
+import BottomTab from "./src/components/bottom-tab";
+import CourtDetail from "./src/views/court-detail";
+import UserBooking from "./src/views/user-boking";
+import AppBar from "./src/components/app-bar";
 
-import { RootStackParamList } from "./src/constants/types/rootStack";
+NativeWindStyleSheet.setOutput({
+  default: "native",
+});
+
+import { RootStackParamList } from "./src/constants/types/root-stack";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -17,12 +23,48 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName="Home"
-          screenOptions={{
-            header: (props) => <AppBar {...props} />,
-          }}
+          screenOptions={({ route }) => ({
+            header: (props) => {
+              switch (route.name) {
+                case "Home":
+                  return (
+                    <AppBar
+                      {...props}
+                      title="Danh sách"
+                      showBackAction={false}
+                      showSearchAction={true}
+                      showMoreAction={true}
+                    />
+                  );
+                case "CourtDetail":
+                  return (
+                    <AppBar
+                      {...props}
+                      title="Chi tiết sân"
+                      showBackAction={true}
+                      showSearchAction={false}
+                      showMoreAction={true}
+                    />
+                  );
+                case "UserBooking":
+                  return (
+                    <AppBar
+                      title="Đặt lịch theo ngày"
+                      {...props}
+                      showBackAction={true}
+                      showSearchAction={false}
+                      showMoreAction={false}
+                    />
+                  );
+                default:
+                  return <AppBar {...props} title="" />;
+              }
+            },
+          })}
         >
-          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Home" component={BottomTab} />
           <Stack.Screen name="CourtDetail" component={CourtDetail} />
+          <Stack.Screen name="UserBooking" component={UserBooking} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>
