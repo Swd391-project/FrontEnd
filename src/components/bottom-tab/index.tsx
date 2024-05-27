@@ -1,8 +1,8 @@
 import * as React from "react";
 import { BottomNavigation } from "react-native-paper";
 
-import Home from "../../views/home";
-import Account from "../../views/account";
+import Home from "../../views/home-page";
+import Account from "../../views/account-page";
 
 export default function BottomTab() {
   const [index, setIndex] = React.useState(0);
