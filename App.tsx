@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { PaperProvider } from "react-native-paper";
 import { NativeWindStyleSheet } from "nativewind";
 
-import BottomTab from "./src/components/bottom-tab";
+import BottomTab from "./src/components/bottom-tab/index";
 import CourtDetail from "./src/views/court-detail";
 import UserBooking from "./src/views/user-boking";
 import AppBar from "./src/components/app-bar";
@@ -14,10 +14,19 @@ NativeWindStyleSheet.setOutput({
 });
 
 import { RootStackParamList } from "./src/constants/types/root-stack";
+import { AuthProvider } from "./app/context/auth-context";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
+  return (
+    <AuthProvider>
+      <LayOut />
+    </AuthProvider>
+  );
+}
+
+export function LayOut() {
   return (
     <PaperProvider>
       <NavigationContainer>
@@ -26,23 +35,12 @@ export default function App() {
           screenOptions={({ route }) => ({
             header: (props) => {
               switch (route.name) {
-                case "Home":
-                  return (
-                    <AppBar
-                      {...props}
-                      title="Danh sách"
-                      showBackAction={false}
-                      showSearchAction={true}
-                      showMoreAction={true}
-                    />
-                  );
                 case "CourtDetail":
                   return (
                     <AppBar
                       {...props}
                       title="Chi tiết sân"
                       showBackAction={true}
-                      showSearchAction={false}
                       showMoreAction={true}
                     />
                   );
@@ -52,7 +50,15 @@ export default function App() {
                       title="Đặt lịch theo ngày"
                       {...props}
                       showBackAction={true}
-                      showSearchAction={false}
+                      showMoreAction={false}
+                    />
+                  );
+                case "UserProfile":
+                  return (
+                    <AppBar
+                      title="User Profile"
+                      {...props}
+                      showBackAction={true}
                       showMoreAction={false}
                     />
                   );

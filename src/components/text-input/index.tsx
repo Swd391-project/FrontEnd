@@ -1,18 +1,26 @@
-import React, { useState } from "react";
+import React from "react";
 import { TextInput } from "react-native-paper";
 
 type textInputProp = {
   label: string;
+  value?: string;
+  secureTextEntry?: boolean;
+  onChangeText?: (text: string) => void;
 };
-export default function TextInputComponent({ label }: textInputProp) {
-  const [text, setText] = useState("");
-
+export default function TextInputComponent({
+  label,
+  value,
+  secureTextEntry,
+  onChangeText,
+}: textInputProp) {
   return (
     <TextInput
       className="m-4"
+      autoCapitalize="none"
       label={label}
-      value={text}
-      onChangeText={(text) => setText(text)}
+      value={value}
+      onChangeText={onChangeText}
+      secureTextEntry={secureTextEntry}
     />
   );
 }
