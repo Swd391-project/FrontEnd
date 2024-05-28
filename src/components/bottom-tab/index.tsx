@@ -1,12 +1,14 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { BottomNavigation } from "react-native-paper";
+import { useAuth } from "../../../app/context/auth-context";
 
 import Home from "../../views/home-page";
 import Account from "../../views/account-page";
+import UserProfile from "../../views/user-profile";
 
 export default function BottomTab() {
-  const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
     {
       key: "home",
       title: "Danh sách",
@@ -14,9 +16,12 @@ export default function BottomTab() {
     },
     { key: "account", title: "Tài Khoản", focusedIcon: "account" },
   ]);
+
+  const { authState } = useAuth();
+
   const renderScene = BottomNavigation.SceneMap({
     home: Home,
-    account: Account,
+    account: authState?.authenticated ? UserProfile : Account,
   });
 
   return (

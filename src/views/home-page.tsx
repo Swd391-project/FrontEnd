@@ -1,7 +1,8 @@
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import { ScrollView } from "react-native";
 
 import BadmintonCourtCard from "../components/card";
+import SearchInput from "../components/text-input/sreach-bar";
 
 const badmintonCourts = [
   {
@@ -34,6 +35,10 @@ const badmintonCourts = [
 export default function Home() {
   return (
     <ScrollView>
+      <Text className="text-2xl font-bold text-brown-700 text-center mb-3 mt-4">
+        Danh sách
+      </Text>
+      <SearchInput />
       <View className="flex-1">
         {badmintonCourts.map((court, index) => (
           <BadmintonCourtCard key={index} court={court} />
