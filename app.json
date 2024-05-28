@@ -23,8 +23,11 @@
         "backgroundColor": "#ffffff"
       }
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
+    "expo": {
+      "web": {
+        "output": "server",
+        "bundler": "metro"
+      }
     }
   }
 }
