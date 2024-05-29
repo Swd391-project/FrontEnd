@@ -12,10 +12,7 @@ type CourtCardProps = {
   court: Court;
 };
 
-type NavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  "CourtDetail"
->;
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export default function BadmintonCourtCard({ court }: CourtCardProps) {
   const navigation = useNavigation<NavigationProp>();

@@ -7,6 +7,8 @@ import { NativeWindStyleSheet } from "nativewind";
 import BottomTab from "./src/components/bottom-tab/index";
 import CourtDetail from "./src/views/court-detail";
 import UserBooking from "./src/views/user-boking";
+import Register from "./src/views/register-page";
+
 import AppBar from "./src/components/app-bar";
 
 NativeWindStyleSheet.setOutput({
@@ -62,6 +64,14 @@ export function LayOut() {
                       showMoreAction={false}
                     />
                   );
+                case "Register":
+                  return (
+                    <AppBar
+                      {...props}
+                      showBackAction={true}
+                      showMoreAction={false}
+                    />
+                  );
                 default:
                   return <AppBar {...props} title="" />;
               }
@@ -69,6 +79,7 @@ export function LayOut() {
           })}
         >
           <Stack.Screen name="Home" component={BottomTab} />
+          <Stack.Screen name="Register" component={Register} />
           <Stack.Screen name="CourtDetail" component={CourtDetail} />
           <Stack.Screen name="UserBooking" component={UserBooking} />
         </Stack.Navigator>

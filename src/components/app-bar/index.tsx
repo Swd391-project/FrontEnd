@@ -3,7 +3,7 @@ import { Appbar } from "react-native-paper";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 
 type AppBarProps = NativeStackHeaderProps & {
-  title: string;
+  title?: string;
   showBackAction?: boolean;
   showSearchAction?: boolean;
   showMoreAction?: boolean;

@@ -2,7 +2,8 @@ import { Court } from "./court";
 
 export type RootStackParamList = {
   Home: undefined;
-  Account: undefined;
+  Login: undefined;
+  Register: undefined;
   UserProfile: undefined;
   CourtDetail: {
     court: Court;
