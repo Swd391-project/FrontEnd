@@ -1,33 +1,26 @@
 import { useState } from "react";
 import { Text, View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import TextInputComponent from "../components/text-input";
 import DefaultButton from "../components/button";
 import { useAuth } from "../../app/context/auth-context";
+import { RootStackParamList } from "../constants/types/root-stack";
 
-type AccountProps = {
-  navigation?: any;
-  route: any;
-};
+export type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-export default function Account({}: AccountProps) {
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { onLogin, onRegister } = useAuth();
+  const { onLogin } = useAuth();
+
+  const navigation = useNavigation<NavigationProp>();
 
   const login = async () => {
     const result = await onLogin!(email, password);
     if (result && result.error) {
       alert(result.msg);
-    }
-  };
-
-  const register = async () => {
-    const result = await onRegister!(email, password);
-    if (result && result.error) {
-      alert(result.msg);
-    } else {
-      login();
     }
   };
 
@@ -47,9 +40,18 @@ export default function Account({}: AccountProps) {
         value={password}
         secureTextEntry={true}
       />
-      <View className="flex flex-row justify-between mt-4">
-        <DefaultButton title="Đăng ký" onPress={register} />
+      <View className="flex flex-row justify-center">
         <DefaultButton title="Đăng nhập" onPress={login} />
+      </View>
+
+      <View className="flex flex-row justify-center">
+        <Text className="pr-1">Chưa có tài khoản</Text>
+        <Text
+          className="text-blue-600 underline"
+          onPress={() => navigation.navigate("Register")}
+        >
+          Đăng kí ngay
+        </Text>
       </View>
     </View>
   );

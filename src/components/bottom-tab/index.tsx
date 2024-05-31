@@ -3,7 +3,7 @@ import { BottomNavigation } from "react-native-paper";
 import { useAuth } from "../../../app/context/auth-context";
 
 import Home from "../../views/home-page";
-import Account from "../../views/account-page";
+import Login from "../../views/login-page";
 import UserProfile from "../../views/user-profile";
 
 export default function BottomTab() {
@@ -21,7 +21,7 @@ export default function BottomTab() {
 
   const renderScene = BottomNavigation.SceneMap({
     home: Home,
-    account: authState?.authenticated ? UserProfile : Account,
+    account: authState?.authenticated ? UserProfile : Login,
   });
 
   return (
