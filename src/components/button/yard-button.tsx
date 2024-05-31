@@ -32,7 +32,7 @@ export default function YardButton({
         timeSelected ? "" : "opacity-50"
       }`}
     >
-      <Image source={require("../../../assets/badminton-yard.png")} />
+      <Image source={require("../../../assets/icons/badminton-yard.png")} />
       <View
         className={`w-10 h-10 rounded-full bg-${isSelected ? "purple-700" : "white"} flex items-center justify-center absolute`}
       >

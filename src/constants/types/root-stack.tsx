@@ -5,6 +5,7 @@ export type RootStackParamList = {
   Login: undefined;
   Register: undefined;
   UserProfile: undefined;
+  Splack: undefined;
   CourtDetail: {
     court: Court;
   };
