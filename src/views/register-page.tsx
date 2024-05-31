@@ -12,7 +12,9 @@ type RegisterProps = NativeStackScreenProps<RootStackParamList, "Register">;
 
 export default function Register({ navigation }: RegisterProps) {
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const { onRegister } = useAuth();
 
   const goBack = () => navigation.goBack();
@@ -47,8 +49,8 @@ export default function Register({ navigation }: RegisterProps) {
 
       <TextInputComponent
         label="Tên đăng nhập"
-        onChangeText={(text: string) => setEmail(text)}
-        value={email}
+        onChangeText={(text: string) => setUsername(text)}
+        value={username}
       />
 
       <TextInputComponent
@@ -60,8 +62,8 @@ export default function Register({ navigation }: RegisterProps) {
 
       <TextInputComponent
         label="Xác nhận mật khẩu"
-        onChangeText={(text: string) => setEmail(text)}
-        value={email}
+        onChangeText={(text: string) => setConfirmPassword(text)}
+        value={confirmPassword}
       />
       <View className="flex flex-row justify-center">
         <DefaultButton title="Đăng ký" onPress={register} />
