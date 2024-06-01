@@ -8,6 +8,7 @@ import YardButton from "../components/button/yard-button";
 import TextInputComponent from "../components/text-input";
 import DefaultButton from "../components/button";
 import formatCurrency from "../helpers/price-format";
+import DatePickerComponent from "../components/date-picker";
 
 import { RootStackParamList } from "../constants/types/root-stack";
 import { Yard } from "../constants/types/yard";
@@ -49,6 +50,7 @@ export default function UserBooking({ route }: CourtDetailProps) {
       <>
         <View className="bg-white p-5 m-2 rounded-lg shadow-sm">
           <Text className="mb-4 text-lg">Chọn thời gian</Text>
+          <DatePickerComponent />
           <TimeBooking
             setTotalHours={setTotalHours}
             setIsChoosen={setIsChoosen}
