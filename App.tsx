@@ -9,7 +9,9 @@ import CourtDetail from "./src/views/court-detail";
 import UserBooking from "./src/views/user-boking";
 import Register from "./src/views/register-page";
 import AppBar from "./src/components/app-bar";
+import Login from "./src/views/login-page";
 import SplashScreen from "./src/views/splash-screen";
+import Checkout from "./src/views/checkout-page";
 import { AuthProvider } from "./app/context/auth-context";
 
 import { RootStackParamList } from "./src/constants/types/root-stack";
@@ -64,6 +66,15 @@ export function LayOut() {
                       showMoreAction={false}
                     />
                   );
+                case "Checkout":
+                  return (
+                    <AppBar
+                      title="Thanh toán"
+                      {...props}
+                      showBackAction={true}
+                      showMoreAction={false}
+                    />
+                  );
                 case "UserProfile":
                   return (
                     <AppBar
@@ -74,6 +85,14 @@ export function LayOut() {
                     />
                   );
                 case "Register":
+                  return (
+                    <AppBar
+                      {...props}
+                      showBackAction={true}
+                      showMoreAction={false}
+                    />
+                  );
+                case "Login":
                   return (
                     <AppBar
                       {...props}
@@ -94,8 +113,10 @@ export function LayOut() {
           )}
 
           <Stack.Screen name="Register" component={Register} />
+          <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="CourtDetail" component={CourtDetail} />
           <Stack.Screen name="UserBooking" component={UserBooking} />
+          <Stack.Screen name="Checkout" component={Checkout} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>

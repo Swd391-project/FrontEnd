@@ -6,6 +6,7 @@ export type RootStackParamList = {
   Register: undefined;
   UserProfile: undefined;
   Splack: undefined;
+  Checkout: undefined;
   CourtDetail: {
     court: Court;
   };

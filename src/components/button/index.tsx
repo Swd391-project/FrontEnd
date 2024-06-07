@@ -3,12 +3,22 @@ import { Button } from "react-native-paper";
 
 type DefaultButtonProps = {
   title: string;
-  onPress?: () => void;
+  disabled?: boolean;
+  onPress: () => void;
 };
 
-export default function DefaultButton({ title, onPress }: DefaultButtonProps) {
+export default function DefaultButton({
+  title,
+  disabled,
+  onPress,
+}: DefaultButtonProps) {
   return (
-    <Button className="m-2 bg-[#7157a9]" mode="contained" onPress={onPress}>
+    <Button
+      className={"m-2 "}
+      mode="contained"
+      onPress={onPress}
+      disabled={disabled}
+    >
       {title}
     </Button>
   );
