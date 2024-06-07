@@ -8,18 +8,17 @@ import { Yard } from "../../constants/types/yard";
 export type YardButtonProps = {
   yard: Yard;
   timeSelected: boolean;
-  onSelect: (yard: Yard) => void;
   isSelected: boolean;
+  onSelect: (yard: Yard) => void;
 };
 
 export default function YardButton({
   yard,
   timeSelected,
-  onSelect,
   isSelected,
+  onSelect,
 }: YardButtonProps) {
   const formattedPrice = formatCurrency(yard.price);
-
   const handlePress = () => {
     onSelect(yard);
   };
