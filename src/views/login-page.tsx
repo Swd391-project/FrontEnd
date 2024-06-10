@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Alert, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
@@ -11,16 +11,29 @@ import { RootStackParamList } from "../constants/types/root-stack";
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export default function Login() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [disable, setDisable] = useState<boolean>(true);
   const { onLogin } = useAuth();
+
+  useEffect(() => {
+    if (username && password) {
+      setDisable(false);
+    } else {
+      setDisable(true);
+    }
+  }, [username, password]);
 
   const navigation = useNavigation<NavigationProp>();
 
   const login = async () => {
-    const result = await onLogin!(email, password);
+    const result = await onLogin!(username, password);
     if (result && result.error) {
-      alert(result.msg);
+      Alert.alert("Lỗi", "Sai tên đăng nhập hoặc mật khẩu.", [
+        {
+          text: "Ok",
+        },
+      ]);
     }
   };
 
@@ -31,8 +44,8 @@ export default function Login() {
       </Text>
       <TextInputComponent
         label="Email"
-        onChangeText={(text: string) => setEmail(text)}
-        value={email}
+        onChangeText={(text: string) => setUsername(text)}
+        value={username}
       />
       <TextInputComponent
         label="Password"
@@ -41,7 +54,7 @@ export default function Login() {
         secureTextEntry={true}
       />
       <View className="flex flex-row justify-center">
-        <DefaultButton title="Đăng nhập" onPress={login} />
+        <DefaultButton title="Đăng nhập" disabled={disable} onPress={login} />
       </View>
 
       <View className="flex flex-row justify-center">
