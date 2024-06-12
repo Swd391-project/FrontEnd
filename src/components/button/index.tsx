@@ -4,7 +4,7 @@ import { Button } from "react-native-paper";
 type DefaultButtonProps = {
   title: string;
   disabled?: boolean;
-  onPress: () => void;
+  onPress?: () => void;
 };
 
 export default function DefaultButton({
