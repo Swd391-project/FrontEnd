@@ -47,16 +47,20 @@ const fields = [
   },
 ];
 
-type CourtDetailRouteProp = RouteProp<RootStackParamList, "UserBooking">;
+export type CourtDetailRouteProp = RouteProp<
+  RootStackParamList,
+  "SingleDayBooking"
+>;
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-type CourtDetailProps = {
+export type CourtDetailProps = {
   route: CourtDetailRouteProp;
 };
 
-export default function UserBooking({ route }: CourtDetailProps) {
+export default function SingleDayBooking({ route }: CourtDetailProps) {
   const [isChoosenTime, setIsChoosenTime] = useState(false);
   const [isSelectYard, setIsSelectYard] = useState(true);
+  const [selectedDay, setSelectedDay] = useState(new Date());
   const [selectedYards, setSelectedYards] = useState<Yard[]>([]);
   const [totalHours, setTotalHours] = useState<number>(0);
   const [modalVisible, setModalVisible] = useState(false);
@@ -67,12 +71,12 @@ export default function UserBooking({ route }: CourtDetailProps) {
 
   const handleSelectYard = (yard: Yard) => {
     const isSelected = selectedYards.find(
-      (selectedYard) => selectedYard.id === yard.id,
+      (selectedYard) => selectedYard.id === yard.id
     );
     let updatedSelectedYards: Yard[] = [];
     if (isSelected) {
       updatedSelectedYards = selectedYards.filter(
-        (selectedYard) => selectedYard.id !== yard.id,
+        (selectedYard) => selectedYard.id !== yard.id
       );
     } else {
       updatedSelectedYards = [...selectedYards, yard];
@@ -108,13 +112,13 @@ export default function UserBooking({ route }: CourtDetailProps) {
     <ScrollView>
       <>
         <View className="bg-white p-5 m-2 rounded-lg shadow-sm">
-          <Text className="mb-4 text-lg">Chọn thời gian</Text>
-          <DatePickerComponent />
+          <Text className="mb-4 font-bold text-lg">Chọn thời gian</Text>
+          <DatePickerComponent onDateChange={setSelectedDay} />
           <TimeBooking
             setTotalHours={setTotalHours}
             setIsChoosen={setIsChoosenTime}
           />
-          <Text className="mb-4 text-lg">Chọn sân</Text>
+          <Text className="mb-4 text-lg font-bold">Chọn sân</Text>
           {court.numberOfYard.map((yard) => (
             <YardButton
               key={yard.id}
@@ -122,7 +126,7 @@ export default function UserBooking({ route }: CourtDetailProps) {
               yard={yard}
               onSelect={handleSelectYard}
               isSelected={selectedYards.some(
-                (selectedYard) => selectedYard.id === yard.id,
+                (selectedYard) => selectedYard.id === yard.id
               )}
             />
           ))}
