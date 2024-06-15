@@ -18,12 +18,21 @@
         "backgroundColor": "#ffffff"
       }
     },
-    "expo": {
-      "web": {
-        "output": "server",
-        "bundler": "metro",
-        "favicon": "./assets/icons/favicon_icon.jpeg"
+    "web": {
+      "output": "server",
+      "bundler": "metro",
+      "favicon": "./assets/icons/favicon_icon.jpeg"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "828b91e1-56da-45df-81d4-06215e53e36e"
       }
+    },
+    "submit": {
+      "production": {}
+    },
+    "cli": {
+      "version": ">= 0.43.0"
     }
   }
 }
