@@ -16,7 +16,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/icons/favicon_icon.jpeg",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.yourcompany.swd392"
     },
     "web": {
       "output": "server",
@@ -33,6 +34,7 @@
     },
     "cli": {
       "version": ">= 0.43.0"
-    }
+    },
+    "owner": "swd392"
   }
 }
