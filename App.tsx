@@ -6,13 +6,15 @@ import { NativeWindStyleSheet } from "nativewind";
 
 import BottomTab from "./src/components/bottom-tab/index";
 import CourtDetail from "./src/views/court-detail";
-import UserBooking from "./src/views/user-boking";
 import Register from "./src/views/register-page";
 import AppBar from "./src/components/app-bar";
 import Login from "./src/views/login-page";
 import SplashScreen from "./src/views/splash-screen";
 import Checkout from "./src/views/checkout-page";
 import { AuthProvider } from "./app/context/auth-context";
+import SingleDayBooking from "./src/views/single-day-booking";
+import FixedSchedule from "./src/views/fixed-schedule";
+import FlexibleSchedule from "./src/views/flexible-schedule";
 
 import { RootStackParamList } from "./src/constants/types/root-stack";
 
@@ -57,10 +59,28 @@ export function LayOut() {
                       showMoreAction={true}
                     />
                   );
-                case "UserBooking":
+                case "FixedSchedule":
+                  return (
+                    <AppBar
+                      title="Đặt lịch cố định"
+                      {...props}
+                      showBackAction={true}
+                      showMoreAction={false}
+                    />
+                  );
+                case "SingleDayBooking":
                   return (
                     <AppBar
                       title="Đặt lịch theo ngày"
+                      {...props}
+                      showBackAction={true}
+                      showMoreAction={false}
+                    />
+                  );
+                case "FlexibleSchedule":
+                  return (
+                    <AppBar
+                      title="Đặt lịch linh hoạt"
                       {...props}
                       showBackAction={true}
                       showMoreAction={false}
@@ -115,7 +135,9 @@ export function LayOut() {
           <Stack.Screen name="Register" component={Register} />
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="CourtDetail" component={CourtDetail} />
-          <Stack.Screen name="UserBooking" component={UserBooking} />
+          <Stack.Screen name="FixedSchedule" component={FixedSchedule} />
+          <Stack.Screen name="SingleDayBooking" component={SingleDayBooking} />
+          <Stack.Screen name="FlexibleSchedule" component={FlexibleSchedule} />
           <Stack.Screen name="Checkout" component={Checkout} />
         </Stack.Navigator>
       </NavigationContainer>

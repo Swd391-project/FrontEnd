@@ -3,14 +3,14 @@ import { Pressable, Text } from "react-native";
 
 type DefaultButtonProps = {
   title: string;
-  onPress?: () => void;
   selected?: boolean;
+  onPress?: () => void;
 };
 
 export default function SelectButton({
   title,
   onPress,
-  selected = false,
+  selected,
 }: DefaultButtonProps) {
   return (
     <Pressable

@@ -10,5 +10,9 @@ export type RootStackParamList = {
   CourtDetail: {
     court: Court;
   };
-  UserBooking: { court: Court };
+  FixedSchedule: {
+    court: Court;
+  };
+  SingleDayBooking: { court: Court };
+  FlexibleSchedule: { court: Court };
 };
