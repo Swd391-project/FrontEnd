@@ -71,12 +71,12 @@ export default function SingleDayBooking({ route }: CourtDetailProps) {
 
   const handleSelectYard = (yard: Yard) => {
     const isSelected = selectedYards.find(
-      (selectedYard) => selectedYard.id === yard.id
+      (selectedYard) => selectedYard.id === yard.id,
     );
     let updatedSelectedYards: Yard[] = [];
     if (isSelected) {
       updatedSelectedYards = selectedYards.filter(
-        (selectedYard) => selectedYard.id !== yard.id
+        (selectedYard) => selectedYard.id !== yard.id,
       );
     } else {
       updatedSelectedYards = [...selectedYards, yard];
@@ -126,7 +126,7 @@ export default function SingleDayBooking({ route }: CourtDetailProps) {
               yard={yard}
               onSelect={handleSelectYard}
               isSelected={selectedYards.some(
-                (selectedYard) => selectedYard.id === yard.id
+                (selectedYard) => selectedYard.id === yard.id,
               )}
             />
           ))}

@@ -42,7 +42,7 @@ export default function UserProfile() {
           </Text>
           <Text>TestRole: {isAllowedToShowProfile ? "Pass" : "Fail"}</Text>
         </View>
-        <View className="mt-20 ml-10">
+        <View className="mt-20 ml-20">
           <Fontisto
             name="more-v-a"
             size={24}

@@ -12,7 +12,6 @@ import Login from "./src/views/login-page";
 import SplashScreen from "./src/views/splash-screen";
 import Checkout from "./src/views/checkout-page";
 import { AuthProvider } from "./app/context/auth-context";
-
 import SingleDayBooking from "./src/views/single-day-booking";
 import FixedSchedule from "./src/views/fixed-schedule";
 import FlexibleSchedule from "./src/views/flexible-schedule";

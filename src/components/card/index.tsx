@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -7,6 +7,7 @@ import DefaultButton from "../button";
 
 import { Court } from "../../constants/types/court";
 import { RootStackParamList } from "../../constants/types/root-stack";
+import SelectBookingTypeModal from "../modal/select-booking-type-modal";
 
 type CourtCardProps = {
   court: Court;
@@ -16,6 +17,8 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export default function BadmintonCourtCard({ court }: CourtCardProps) {
   const navigation = useNavigation<NavigationProp>();
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <View className="bg-white p-5 m-2 rounded-lg shadow-sm">
@@ -28,9 +31,11 @@ export default function BadmintonCourtCard({ court }: CourtCardProps) {
           Số điện thoại: {court.phone}
         </Text>
       </TouchableOpacity>
-      <DefaultButton
-        onPress={() => navigation.navigate("UserBooking", { court })}
-        title="Đặt lịch"
+      <DefaultButton onPress={() => setModalVisible(true)} title="Đặt lịch" />
+      <SelectBookingTypeModal
+        court={court}
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
       />
     </View>
   );
