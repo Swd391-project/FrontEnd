@@ -1,92 +1,118 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, ScrollView, Alert } from "react-native";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../constants/types/root-stack";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import RNPickerSelect from "react-native-picker-select";
 
-import DayOfWeek from "../components/date-picker/day-of-week";
-import DatePickerComponent from "../components/date-picker";
 import { useAuth } from "../../app/context/auth-context";
 import ModalComponent from "../components/modal";
 import DefaultButton from "../components/button";
+import { months } from "../constants/months";
+import { getRequest } from "../helpers/api-requests";
+import TimeBooking from "../components/choose-time-booking";
+import SelectButton from "../components/button/select-button";
+import TextInputComponent from "../components/text-input";
+import formatCurrency from "../helpers/price-format";
 import { getVietnameseDay } from "../helpers/translate-day";
+import SplashScreen from "./splash-screen";
 
-const fields = [
-  {
-    id: "name",
-    label: "Tên:",
-  },
-  {
-    id: "phone",
-    label: "Số điện thoại:",
-  },
-  {
-    id: "courtName",
-    label: "Tên sân:",
-  },
-  {
-    id: "day",
-    label: "Ngày:",
-  },
-  {
-    id: "address",
-    label: "Địa chỉ:",
-  },
-  {
-    id: "time",
-    label: "Thời gian:",
-  },
-  {
-    id: "price",
-    label: "Tổng tiền:",
-  },
-];
+import { Court } from "../constants/types/court";
+import { phoneRegex } from "../helpers/regex";
 
 export type CourtDetailRouteProp = RouteProp<
   RootStackParamList,
-  "SingleDayBooking"
+  "FixedSchedule"
 >;
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-export type DayAndHour = {
-  [day: string]: {
-    startTime: Date | undefined;
-    endTime: Date | undefined;
-  };
+export type CourtProps = {
+  route: CourtDetailRouteProp;
 };
 
-export default function FixedSchedule() {
-  const [startMonth, setStartMonth] = useState(new Date());
-  const [endMonth, setEndMonth] = useState(new Date());
-  const [dayAndHour, setDayAndHour] = useState<DayAndHour>({});
-  const [modalVisible, setModalVisible] = useState(false);
+export default function FixedSchedule({ route }: CourtProps) {
+  const { courtId } = route.params;
 
   const { authState } = useAuth();
   const navigation = useNavigation<NavigationProp>();
 
-  const handleDayTimeChange = (
-    day: string,
-    startTime?: Date,
-    endTime?: Date,
-  ) => {
-    setDayAndHour((prevState) => {
-      const updatedState = { ...prevState };
+  const [fullName, setFullName] = useState<string>(
+    authState?.user ? authState.user["full-name"] : "",
+  );
+  const [phoneNumber, setPhoneNumber] = useState<string>(
+    authState?.user ? authState.user["phone-number"] : "",
+  );
+  const [court, setCourt] = useState<Court>();
+  const [selectedMonth, setSelectedMonth] = useState<number>(0);
+  const [selectedYear, setSelectedYear] = useState<number>(0);
+  const [isChoosenTime, setIsChoosenTime] = useState(false);
+  const [time, setTime] = useState<string[]>([]);
+  const [fromTime, setFromTime] = useState<string>("");
+  const [toTime, setToime] = useState<string>("");
+  const [weekdays, setWeekdays] = useState<
+    Array<{ "activity-status": string; id: number; weekday: string }>
+  >([]);
+  const [selectedWeekdDays, setSelectedWeekDays] = useState<string[]>([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [totalPrice, setTotalPrice] = useState<number>(0);
+  const [totalHours, setTotalHours] = useState<number>(0);
+  const [phoneError, setPhoneError] = useState<string | undefined>(undefined);
 
-      if (startTime !== undefined && endTime !== undefined) {
-        updatedState[day] = { startTime, endTime };
-      } else {
-        delete updatedState[day];
-      }
+  const currentYear = new Date().getFullYear();
+  const futureYears = Array.from({ length: 5 }, (_, i) => ({
+    label: (currentYear + i).toString(),
+    value: (currentYear + i).toString(),
+  }));
 
-      return updatedState;
-    });
-  };
+  useEffect(() => {
+    getRequest(`/court-group/${courtId}`)
+      .then(({ data }) => {
+        setCourt(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
 
-  const getHourFromDate = (date: Date | undefined): number | undefined => {
-    return date ? date.getHours() : undefined;
+  useEffect(() => {
+    getRequest(`/court-group/fixed-booking-page/${courtId}`)
+      .then(({ data }) => {
+        setTime(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (selectedMonth && selectedYear && fromTime) {
+      getRequest(
+        `/court-group/fixed-booking-page/check-days-of-week/${courtId}?Month=${selectedMonth}&Year=${selectedYear}&from-time=${fromTime}&to-time=${toTime}`,
+      )
+        .then(({ data }) => {
+          setWeekdays(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    }
+  }, [selectedMonth, selectedYear, fromTime, toTime]);
+
+  const toggleDaySelection = (dayName: string) => {
+    const isSelected = selectedWeekdDays.includes(dayName);
+    if (isSelected) {
+      setSelectedWeekDays(selectedWeekdDays.filter((name) => name !== dayName));
+    } else {
+      setSelectedWeekDays([...selectedWeekdDays, dayName]);
+    }
   };
 
   const handleBookingPress = () => {
+    if (!phoneRegex.test(phoneNumber)) {
+      setPhoneError("Số điện thoại không hợp lệ.");
+    } else {
+      setPhoneError(undefined);
+    }
     if (authState?.authenticated) {
       setModalVisible(!modalVisible);
     } else {
@@ -98,62 +124,163 @@ export default function FixedSchedule() {
     }
   };
 
-  const handleCheckoutPress = () => {
+  const handleConfirmPress = () => {
     setModalVisible(!modalVisible);
-    navigation.navigate("Checkout");
+    navigation.navigate("ConfirmFixedBooking", {
+      fullName,
+      phoneNumber,
+      courtId,
+      courtName: court!.name,
+      courtAddress: court!.address,
+      month: selectedMonth,
+      year: selectedYear,
+      weekdays: selectedWeekdDays,
+      fromTime,
+      toTime,
+      totalHours,
+      totalPrice,
+    });
   };
 
-  return (
-    <ScrollView>
-      <View className="flex-1 p-3 bg-gray-100">
-        <View className=" bg-white justify-between mb-4 rounded-lg">
-          <Text className="text-lg pl-5 pt-4 text-gray-800 font-bold">
-            Chọn ngày bắt đầu và kết thúc
-          </Text>
-          <View className="flex flex-row justify-between mb-3">
-            <View className="p-2 pl-5">
-              <Text className="text-lg pl-3 text-gray-800">Từ ngày</Text>
-              <DatePickerComponent onDateChange={setStartMonth} />
-            </View>
+  if (!court) {
+    return <SplashScreen />;
+  }
 
-            <View className="p-2 pr-5">
-              <Text className="text-lg pl-3 text-gray-800">Đến ngày</Text>
-              <DatePickerComponent onDateChange={setEndMonth} />
+  const fields = [
+    {
+      id: "name",
+      label: `Tên: ${fullName}`,
+    },
+    {
+      id: "phone",
+      label: `Số điện thoại: ${phoneNumber}`,
+    },
+    {
+      id: "courtName",
+      label: `Tên sân ${court.name}`,
+    },
+
+    {
+      id: "address",
+      label: `Địa chỉ ${court.address}`,
+    },
+    {
+      id: "time",
+      label: `Từ ${fromTime} giờ đến ${toTime} giờ (${totalHours} giờ)`,
+    },
+    {
+      id: "date",
+      label: `Các ngày: ${getVietnameseDay(selectedWeekdDays)} hàng tuần`,
+    },
+
+    {
+      id: "price",
+      label: `Tổng tiền: ${formatCurrency(totalPrice)}`,
+    },
+  ];
+
+  return (
+    <ScrollView className="bg-amber-400">
+      <View>
+        <View className="bg-white p-5 m-2 rounded-lg shadow-sm">
+          <Text className="font-bold text-lg">Sân: {court.name}</Text>
+          <Text className="text-base mb-1">Địa chỉ: {court.address}</Text>
+          <Text className="text-base mb-1">Trạng thái: {court.status}</Text>
+          <Text className="text-base mb-1">Đánh giá: {court.rate}</Text>
+          <Text className="text-base mb-1">Giá tiền: {court.price}</Text>
+        </View>
+
+        <View className="bg-white p-5 m-2 rounded-lg shadow-sm">
+          <View className="m-3">
+            <Text className="text-xl font-bold">Chọn tháng:</Text>
+            <View className="m-3 rounded-lg border-solid border-2 border-purple-700">
+              <RNPickerSelect
+                placeholder={{ label: "Chọn tháng...", value: null }}
+                items={months}
+                onValueChange={(value) => setSelectedMonth(value)}
+              />
+            </View>
+          </View>
+
+          <View className="m-3">
+            <Text className="text-xl font-bold">Chọn năm:</Text>
+            <View className="m-3 rounded-lg border-solid border-2 border-purple-700">
+              <RNPickerSelect
+                placeholder={{ label: "Chọn năm...", value: null }}
+                items={futureYears}
+                onValueChange={(value) => setSelectedYear(parseInt(value))}
+              />
             </View>
           </View>
         </View>
 
-        <View className="bg-white justify-between mb-4 rounded-lg">
-          <Text className="text-lg pl-5 pt-4 text-gray-800 font-bold">
-            Chọn thời gian
-          </Text>
-          <View className="pl-5">
-            <DayOfWeek onDayTimeChange={handleDayTimeChange}></DayOfWeek>
+        <View className="bg-white p-5 m-2 rounded-lg shadow-sm">
+          <Text className="text-xl font-bold">Chọn thời gian</Text>
+          <TimeBooking
+            setTotalPrice={setTotalPrice}
+            time={time}
+            setTotalHours={setTotalHours}
+            setIsChoosen={setIsChoosenTime}
+            setFromTime={setFromTime}
+            setToTime={setToime}
+          />
+        </View>
 
-            <Text className="text-lg pt-4 text-gray-800 font-bold">
-              Ngày và giờ đã chọn
-            </Text>
-            {Object.keys(dayAndHour).map((day) => (
-              <View key={day} className="mb-2 rounded-lg bg-orange-300">
-                <Text className="font-medium p-2">{`Ngày ${getVietnameseDay(day)}:`}</Text>
-                <Text className="p-2">{`Bắt đầu: ${getHourFromDate(dayAndHour[day].startTime)} giờ`}</Text>
-                <Text className="p-2">{`Kết thúc: ${getHourFromDate(dayAndHour[day].endTime)} giờ`}</Text>
-              </View>
-            ))}
+        <View className="bg-white p-5 m-2 rounded-lg shadow-sm">
+          <Text className="text-xl font-bold">Chọn ngày chơi</Text>
+          {weekdays.map((day) => (
+            <SelectButton
+              key={day.id}
+              title={getVietnameseDay(day.weekday)}
+              onPress={() => {
+                toggleDaySelection(day.weekday);
+              }}
+              selected={selectedWeekdDays.includes(day.weekday)}
+            ></SelectButton>
+          ))}
+        </View>
+
+        <View className="bg-white p-5 m-2 rounded-lg shadow-sm">
+          <Text className="text-xl font-bold">Thông tin người đặt</Text>
+          <View className="m-3">
+            <TextInputComponent
+              value={fullName}
+              onChangeText={setFullName}
+              label="Họ và tên"
+              errorMessage={
+                !fullName ? "Họ và tên không được trống." : undefined
+              }
+            />
           </View>
+
+          <View className="m-3">
+            <TextInputComponent
+              value={phoneNumber}
+              onChangeText={setPhoneNumber}
+              label="Số Điện thoại"
+              errorMessage={phoneError}
+            />
+          </View>
+
+          <DefaultButton
+            title="Đặt trước"
+            disabled={
+              selectedMonth === 0 ||
+              selectedYear === 0 ||
+              !isChoosenTime ||
+              selectedWeekdDays.length === 0 ||
+              !fullName
+            }
+            onPress={handleBookingPress}
+          />
+          <ModalComponent
+            fields={fields}
+            modalVisible={modalVisible}
+            onPress={handleConfirmPress}
+            setModalVisible={setModalVisible}
+          />
         </View>
       </View>
-      <DefaultButton
-        title="Đặt trước"
-        // disabled={isSelectYard}
-        onPress={handleBookingPress}
-      />
-      <ModalComponent
-        fields={fields}
-        modalVisible={modalVisible}
-        onPress={handleCheckoutPress}
-        setModalVisible={setModalVisible}
-      />
     </ScrollView>
   );
 }

@@ -3,7 +3,7 @@ import { Pressable, Text, Image, View } from "react-native";
 
 import formatCurrency from "../../helpers/price-format";
 
-import { Yard } from "../../constants/types/yard";
+import { Yard } from "../../constants/types/weekday-activity";
 
 export type YardButtonProps = {
   yard: Yard;
