@@ -7,7 +7,6 @@ export const formatTime = (date: Date | undefined): string => {
   return `${hours}:${minutes}`;
 };
 
-// Hàm chuyển đổi chuỗi thời gian sang Date
 export const parseTimeStringToDate = (timeString: string): Date => {
   const [hours, minutes] = timeString.split(":").map(Number);
   const dateObject = new Date();

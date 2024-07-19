@@ -52,15 +52,33 @@ export default function ConfirmSingleDayBooking({
       };
 
       postRequest(`/booking/${courtId}`, authState.token, requestBody)
-        .then(() => {
+        .then((data) => {
           Alert.alert(
             "Đặt sân thành công",
             "Sân đã được đặt thành công!",
             [
               {
-                text: "OK",
+                text: "Đặt tiếp",
                 onPress: () => {
                   navigation.navigate("Home");
+                },
+              },
+              {
+                text: "Thanh toán",
+                onPress: () => {
+                  navigation.navigate("CheckOut", {
+                    bookingId: data.id,
+                    fullName,
+                    phoneNumber,
+                    courtId,
+                    courtName,
+                    dayBooking,
+                    courtAddress,
+                    fromTime,
+                    toTime,
+                    totalHours,
+                    totalPrice,
+                  });
                 },
               },
             ],
@@ -77,6 +95,7 @@ export default function ConfirmSingleDayBooking({
         });
     }
   };
+
   return (
     <ScrollView className="flex-1 bg-amber-400 p-5">
       <View className="bg-white p-5 rounded-lg mb-3">

@@ -30,6 +30,19 @@ export type RootStackParamList = {
     totalHours: number;
     totalPrice: any;
   };
+  CheckOut: {
+    bookingId: number;
+    fullName: string;
+    phoneNumber: string;
+    courtId: number;
+    courtName: string;
+    dayBooking: string;
+    courtAddress: string;
+    fromTime: string;
+    toTime: string;
+    totalHours: number;
+    totalPrice: any;
+  };
   CourtDetail: {
     courtId: number;
     onSuccess: () => void;

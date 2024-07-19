@@ -3,6 +3,7 @@ import { View, Text, Image } from "react-native";
 import Toast from "react-native-toast-message";
 import { AntDesign } from "@expo/vector-icons";
 import "../../assets/icons/badminton-wallpaper-preview.jpg";
+import { MaterialIcons } from "@expo/vector-icons";
 
 import { useAuth } from "../../app/context/auth-context";
 import DefaultButton from "../components/button";
@@ -119,9 +120,15 @@ export default function UserProfile() {
             </Text>
           </View>
         </View>
-
+        <View className="ml-auto">
+          <MaterialIcons
+            name="logout"
+            size={30}
+            color="black"
+            onPress={onLogout}
+          />
+        </View>
         <View className="bg-black h-0.5" />
-        <DefaultButton title="Logout" onPress={onLogout} />
       </View>
     </View>
   );

@@ -14,7 +14,6 @@ export default function AppBar({
   showBackAction,
 }: AppBarProps) {
   const goBack = () => navigation.goBack();
-  const handleMore = () => console.log("Filter");
 
   return (
     <>

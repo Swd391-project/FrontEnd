@@ -16,10 +16,11 @@ import SingleDayBooking from "./src/views/single-day-booking";
 import FixedSchedule from "./src/views/fixed-schedule";
 import FlexibleSchedule from "./src/views/flexible-schedule";
 import AddNewCourt from "./src/views/add-new-count";
-
-import { RootStackParamList } from "./src/constants/types/root-stack";
 import ConfirmSingleDayBooking from "./src/views/confirm-single-day-booking";
 import ConfirmFixedBooking from "./src/views/confirm-fixed-booking.tsx";
+import CheckOut from "./src/views/check-out";
+
+import { RootStackParamList } from "./src/constants/types/root-stack";
 
 NativeWindStyleSheet.setOutput({
   default: "native",
@@ -122,6 +123,8 @@ export function LayOut() {
                       showBackAction={true}
                     />
                   );
+                case "CheckOut":
+                  return <AppBar {...props} title="Thanh Toán" />;
                 case "Splack":
                   return;
               }
@@ -140,6 +143,7 @@ export function LayOut() {
           <Stack.Screen name="FixedSchedule" component={FixedSchedule} />
           <Stack.Screen name="SingleDayBooking" component={SingleDayBooking} />
           <Stack.Screen name="FlexibleSchedule" component={FlexibleSchedule} />
+          <Stack.Screen name="CheckOut" component={CheckOut} />
           <Stack.Screen
             name="ConfirmSingleDayBooking"
             component={ConfirmSingleDayBooking}

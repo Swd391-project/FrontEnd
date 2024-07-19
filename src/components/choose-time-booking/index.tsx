@@ -41,6 +41,10 @@ export default function TimeBooking({
     );
   };
 
+  const filteredTimes = time.filter(
+    (timeSlot) => timeSlot.status === "Available",
+  );
+
   const calculateTotalHours = () => {
     if (selectedTimes.length < 2) return 0;
     const sortedTimes = selectedTimes.sort(
@@ -64,7 +68,7 @@ export default function TimeBooking({
     const start = new Date(`1970-01-01T${sortedTimes[0]["from-time"]}:00`);
     const end = new Date(`1970-01-01T${sortedTimes[1]["to-time"]}:00`);
     const hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
-    const pricePerHour = sortedTimes[0].price / 0.5; // Giả sử mỗi khoảng thời gian là 30 phút và giá là cho 30 phút
+    const pricePerHour = sortedTimes[0].price / 0.5;
     const totalPrice = hours * pricePerHour;
     return totalPrice;
   };
@@ -101,7 +105,7 @@ export default function TimeBooking({
   return (
     <>
       <View className="flex-row flex-wrap">
-        {time.map((timeSlot) => (
+        {filteredTimes.map((timeSlot) => (
           <SelectButton
             key={timeSlot.id}
             title={`${timeSlot["from-time"]} - ${timeSlot["to-time"]}`}
@@ -115,11 +119,11 @@ export default function TimeBooking({
         ))}
       </View>
       <Text className="pt-4 text-lg">
-        Số giờ đã chọn:{" "}
+        Số giờ đã chọn:
         {selectedTimes.length === 2 ? calculateTotalHours().toFixed(1) : 0} giờ
       </Text>
       <Text className="mt-2 text-lg">
-        Tổng số tiền:{" "}
+        Tổng số tiền:
         {selectedTimes.length === 2
           ? formatCurrency(calculateTotalPrice())
           : formatCurrency(0)}

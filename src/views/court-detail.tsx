@@ -3,7 +3,8 @@ import { View, Text, Image, ScrollView, Alert } from "react-native";
 import { RouteProp } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import { Picker } from "@react-native-picker/picker";
+
 import { Button } from "react-native-paper";
 
 import {
@@ -56,22 +57,18 @@ export default function CourtDetail({ route }: CourtDetailProps) {
   const [responseProfileImage, setResponseProfileImage] = useState<string>("");
   const [responseCoverImage, setResponseCoverImage] = useState<string>("");
   const [onEdit, setOnEdit] = useState(false);
-
   const handleEditPress = () => {
     setOnEdit(!onEdit);
   };
 
-  const handleStartTimeChange = (
-    event: any,
-    selectedTime: Date | undefined,
+  const handleHourChange = (
+    selectedHour: number,
+    type: "startTime" | "endTime",
   ) => {
-    setShowStartTimePicker(false);
-    setHour({ ...hour, startTime: selectedTime });
-  };
-
-  const handleEndTimeChange = (event: any, selectedTime: Date | undefined) => {
-    setShowEndTimePicker(false);
-    setHour({ ...hour, endTime: selectedTime });
+    const currentHour = new Date();
+    currentHour.setHours(selectedHour);
+    currentHour.setMinutes(0); // Đặt phút thành 0
+    setHour({ ...hour, [type]: currentHour });
   };
 
   useEffect(() => {
@@ -269,13 +266,12 @@ export default function CourtDetail({ route }: CourtDetailProps) {
               <TextInputComponent
                 value={courtName}
                 onChangeText={(text) => setCourtName(text)}
-              ></TextInputComponent>
-
+              />
               <Text className="text-lg mb-2">Địa Chỉ:</Text>
               <TextInputComponent
                 value={courtAddress}
                 onChangeText={(text) => setCourtAddress(text)}
-              ></TextInputComponent>
+              />
               <View className="flex justify-around flex-row">
                 <View className="justify-center">
                   <Text className="text-base">Giờ mở cửa:</Text>
@@ -289,13 +285,26 @@ export default function CourtDetail({ route }: CourtDetailProps) {
                     onPress={() => setShowStartTimePicker(true)}
                   />
                   {showStartTimePicker && (
-                    <DateTimePicker
-                      value={hour.startTime || new Date()}
-                      mode="time"
-                      is24Hour={true}
-                      display="spinner"
-                      onChange={handleStartTimeChange}
-                    />
+                    <View className="h-40">
+                      <Picker
+                        selectedValue={
+                          hour.startTime
+                            ? hour.startTime.getHours()
+                            : new Date().getHours()
+                        }
+                        onValueChange={(itemValue) =>
+                          handleHourChange(itemValue as number, "startTime")
+                        }
+                      >
+                        {[...Array(24).keys()].map((hour) => (
+                          <Picker.Item
+                            key={hour}
+                            label={`${hour}:00`}
+                            value={hour}
+                          />
+                        ))}
+                      </Picker>
+                    </View>
                   )}
                 </View>
                 <View className="justify-center">
@@ -310,13 +319,26 @@ export default function CourtDetail({ route }: CourtDetailProps) {
                     onPress={() => setShowEndTimePicker(true)}
                   />
                   {showEndTimePicker && (
-                    <DateTimePicker
-                      value={hour.endTime || new Date()}
-                      mode="time"
-                      is24Hour={true}
-                      display="spinner"
-                      onChange={handleEndTimeChange}
-                    />
+                    <View className="h-40">
+                      <Picker
+                        selectedValue={
+                          hour.endTime
+                            ? hour.endTime.getHours()
+                            : new Date().getHours()
+                        }
+                        onValueChange={(itemValue) =>
+                          handleHourChange(itemValue as number, "endTime")
+                        }
+                      >
+                        {[...Array(24).keys()].map((hour) => (
+                          <Picker.Item
+                            key={hour}
+                            label={`${hour}:00`}
+                            value={hour}
+                          />
+                        ))}
+                      </Picker>
+                    </View>
                   )}
                 </View>
               </View>
@@ -338,11 +360,6 @@ export default function CourtDetail({ route }: CourtDetailProps) {
               </Text>
             </View>
           )}
-          <View className="m-4">
-            <Text className="text-base mb-1">Trạng thái: {court.status}</Text>
-
-            <Text className="text-base mb-1">Đánh giá: {court.rate}</Text>
-          </View>
         </View>
         <View className="m-3">
           <Text className="text-xl font-bold mb-2">Ngày mở cửa:</Text>

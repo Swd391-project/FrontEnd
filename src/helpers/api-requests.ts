@@ -4,7 +4,6 @@ import { config } from "../../config";
 
 export const getRequest = async (path: string, token?: string) => {
   const headers: Record<string, string> = {};
-
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
@@ -65,6 +64,7 @@ export const postRequest = async (
       },
     },
   );
+
   return data;
 };
 

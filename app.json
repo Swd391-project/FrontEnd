@@ -35,6 +35,10 @@
     "cli": {
       "version": ">= 0.43.0"
     },
-    "owner": "swd392"
+    "owner": "swd392",
+    "plugins": [
+      "expo-router",
+      "expo-secure-store"
+    ]
   }
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Alert, ScrollView } from "react-native";
+import { View, Text, Alert, ScrollView, Image } from "react-native";
 
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -13,7 +13,11 @@ import ModalComponent from "../components/modal";
 import { formatDateToString } from "../helpers/format-date-to-string";
 import { useAuth } from "../../app/context/auth-context";
 import { Court } from "../constants/types/court";
-import { getRequest, postRequest } from "../helpers/api-requests";
+import {
+  getRequest,
+  getRequestImage,
+  postRequest,
+} from "../helpers/api-requests";
 import SplashScreen from "./splash-screen";
 
 import { RootStackParamList } from "../constants/types/root-stack";
@@ -40,6 +44,7 @@ export default function SingleDayBooking({ route }: CourtProps) {
     authState?.user ? authState.user["phone-number"] : "",
   );
   const [court, setCourt] = useState<Court>();
+  const [profileImageUri, setProfileImageUri] = useState<string>("");
   const [time, setTime] = useState<string[]>([]);
   const [isChoosenTime, setIsChoosenTime] = useState(false);
   const [selectedDay, setSelectedDay] = useState(new Date());
@@ -53,14 +58,21 @@ export default function SingleDayBooking({ route }: CourtProps) {
 
   const DayString = formatDateToString(selectedDay);
   useEffect(() => {
-    getRequest(`/court-group/${courtId}`)
-      .then(({ data }) => {
+    const fetchData = async () => {
+      try {
+        const { data } = await getRequest(`/court-group/${courtId}`);
         setCourt(data);
-      })
-      .catch((error) => {
+        if (data["profile-image"]) {
+          const profileImageUrl = await getRequestImage(data["profile-image"]);
+          setProfileImageUri(profileImageUrl);
+        }
+      } catch (error) {
         console.error("Error fetching data:", error);
-      });
-  }, []);
+      }
+    };
+
+    fetchData();
+  }, [courtId]);
 
   useEffect(() => {
     const requestBody = {
@@ -143,11 +155,23 @@ export default function SingleDayBooking({ route }: CourtProps) {
     <ScrollView>
       <View className="bg-amber-400">
         <View className="bg-white p-5 m-2 rounded-lg shadow-sm">
-          <Text className="text-xl font-bold">Sân: {court.name}</Text>
+          {profileImageUri ? (
+            <View className="">
+              <Image
+                className="w-50 h-28 p-1 bg-white rounded-lg"
+                source={{ uri: profileImageUri }}
+              />
+            </View>
+          ) : (
+            <View className="">
+              <Image
+                className="w-50 h-28 p-1 bg-white "
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzarRZzdxjwFhIIdApYRTHBPLxbNUNj8thfA&s"
+              />
+            </View>
+          )}
+          <Text className="text-xl font-bold mt-2">Sân: {court.name}</Text>
           <Text className="text-base mb-1">Địa chỉ: {court.address}</Text>
-          <Text className="text-base mb-1">Trạng thái: {court.status}</Text>
-          <Text className="text-base mb-1">Đánh giá: {court.rate}</Text>
-          <Text className="text-base mb-1">Giá tiền: {court.price}</Text>
         </View>
         <View className="bg-white p-5 m-2 rounded-lg shadow-sm">
           <Text className="text-xl font-bold">Chọn thời gian</Text>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, Alert } from "react-native";
+import { View, Text, ScrollView, Alert, Image } from "react-native";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../constants/types/root-stack";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -9,7 +9,7 @@ import { useAuth } from "../../app/context/auth-context";
 import ModalComponent from "../components/modal";
 import DefaultButton from "../components/button";
 import { months } from "../constants/months";
-import { getRequest } from "../helpers/api-requests";
+import { getRequest, getRequestImage } from "../helpers/api-requests";
 import TimeBooking from "../components/choose-time-booking";
 import SelectButton from "../components/button/select-button";
 import TextInputComponent from "../components/text-input";
@@ -43,6 +43,7 @@ export default function FixedSchedule({ route }: CourtProps) {
     authState?.user ? authState.user["phone-number"] : "",
   );
   const [court, setCourt] = useState<Court>();
+  const [profileImageUri, setProfileImageUri] = useState<string>("");
   const [selectedMonth, setSelectedMonth] = useState<number>(0);
   const [selectedYear, setSelectedYear] = useState<number>(0);
   const [isChoosenTime, setIsChoosenTime] = useState(false);
@@ -65,14 +66,21 @@ export default function FixedSchedule({ route }: CourtProps) {
   }));
 
   useEffect(() => {
-    getRequest(`/court-group/${courtId}`)
-      .then(({ data }) => {
+    const fetchData = async () => {
+      try {
+        const { data } = await getRequest(`/court-group/${courtId}`);
         setCourt(data);
-      })
-      .catch((error) => {
+        if (data["profile-image"]) {
+          const profileImageUrl = await getRequestImage(data["profile-image"]);
+          setProfileImageUri(profileImageUrl);
+        }
+      } catch (error) {
         console.error("Error fetching data:", error);
-      });
-  }, []);
+      }
+    };
+
+    fetchData();
+  }, [courtId]);
 
   useEffect(() => {
     getRequest(`/court-group/fixed-booking-page/${courtId}`)
@@ -183,11 +191,23 @@ export default function FixedSchedule({ route }: CourtProps) {
     <ScrollView className="bg-amber-400">
       <View>
         <View className="bg-white p-5 m-2 rounded-lg shadow-sm">
+          {profileImageUri ? (
+            <View className="">
+              <Image
+                className="w-50 h-28 p-1 bg-white rounded-lg"
+                source={{ uri: profileImageUri }}
+              />
+            </View>
+          ) : (
+            <View className="">
+              <Image
+                className="w-50 h-28 p-1 bg-white "
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzarRZzdxjwFhIIdApYRTHBPLxbNUNj8thfA&s"
+              />
+            </View>
+          )}
           <Text className="font-bold text-lg">Sân: {court.name}</Text>
           <Text className="text-base mb-1">Địa chỉ: {court.address}</Text>
-          <Text className="text-base mb-1">Trạng thái: {court.status}</Text>
-          <Text className="text-base mb-1">Đánh giá: {court.rate}</Text>
-          <Text className="text-base mb-1">Giá tiền: {court.price}</Text>
         </View>
 
         <View className="bg-white p-5 m-2 rounded-lg shadow-sm">
