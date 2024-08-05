@@ -5,6 +5,9 @@ export function checkRolesIfAllow(allowedRoles: string, userRoles?: string) {
   return allowedRoles === userRoles;
 }
 
+export const isAllowAll = (userRoles?: string) =>
+  isCustomer(userRoles) || isManager(userRoles) || isStaff(userRoles);
+
 export const isCustomer = (userRoles?: string) =>
   checkRolesIfAllow(UserRole.CUSTOMER, userRoles);
 

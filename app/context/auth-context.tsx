@@ -9,8 +9,11 @@ interface AuthProps {
     token: string | null;
     authenticated: boolean | null;
     user?: {
-      role: string;
+      id: string;
       "full-name": string;
+      "phone-number": string;
+      image: string;
+      role: string;
     };
   };
   onRegister?: (
@@ -23,8 +26,8 @@ interface AuthProps {
   onLogout?: () => Promise<any>;
 }
 
-const TOKEN_KEY = "";
-const USER_DATA_KEY = "";
+const TOKEN_KEY = "userToken";
+const USER_DATA_KEY = "userData";
 export const API_URL = `${config.BACKEND_API}/api/auth`;
 const AuthContext = createContext<AuthProps>({});
 
@@ -37,8 +40,11 @@ export const AuthProvider = ({ children }: any) => {
     token: string | null;
     authenticated: boolean | null;
     user?: {
-      role: string;
+      id: string;
       "full-name": string;
+      "phone-number": string;
+      image: string;
+      role: string;
     };
   }>({
     token: null,
@@ -72,9 +78,9 @@ export const AuthProvider = ({ children }: any) => {
   ) => {
     try {
       return await axios.post(`${API_URL}/register`, {
+        "full-name": fullName,
         email,
-        fullName,
-        phoneNumber,
+        "phone-number": phoneNumber,
         password,
       });
     } catch (e) {
@@ -88,9 +94,11 @@ export const AuthProvider = ({ children }: any) => {
         username,
         password,
       });
-
       const userData = {
+        id: result.data.id,
         ["full-name"]: result.data["full-name"],
+        ["phone-number"]: result.data["phone-number"],
+        image: result.data.image,
         role: result.data.role,
       };
 
@@ -111,8 +119,12 @@ export const AuthProvider = ({ children }: any) => {
   };
 
   const logout = async () => {
-    await SecureStore.deleteItemAsync(TOKEN_KEY);
-    await SecureStore.deleteItemAsync(USER_DATA_KEY);
+    try {
+      await SecureStore.deleteItemAsync(TOKEN_KEY);
+      await SecureStore.deleteItemAsync(USER_DATA_KEY);
+    } catch (error) {
+      console.error("Error deleting tokens:", error);
+    }
 
     axios.defaults.headers.common["Authorization"] = "";
 

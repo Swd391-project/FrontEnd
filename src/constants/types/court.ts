@@ -1,11 +1,15 @@
-import { Yard } from "./yard";
+import { WeekdayActivity } from "./weekday-activity";
 
 export type Court = {
+  id: number;
   name: string;
-  location: string;
+  address: string;
   status: string;
   price: number;
-  rating: number;
-  phone: string;
-  numberOfYard: Yard[];
+  rate: number;
+  ["profile-image"]: string;
+  ["cover-image"]: string;
+  ["start-time"]: string;
+  ["end-time"]: string;
+  ["weekday-activities"]: WeekdayActivity[];
 };

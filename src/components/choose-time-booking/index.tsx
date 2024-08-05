@@ -1,88 +1,133 @@
 import React, { useState, useEffect } from "react";
 import { View, Text } from "react-native";
 
+import formatCurrency from "../../helpers/price-format";
 import SelectButton from "../button/select-button";
 
 export type createTimeSlotProp = {
+  time: any[];
   setIsChoosen: React.Dispatch<React.SetStateAction<boolean>>;
   setTotalHours: React.Dispatch<React.SetStateAction<number>>;
+  setTotalPrice: React.Dispatch<React.SetStateAction<number>>;
+  setFromTime: React.Dispatch<React.SetStateAction<string>>;
+  setToTime: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export default function TimeBooking({
+  time,
   setIsChoosen,
   setTotalHours,
+  setTotalPrice,
+  setFromTime,
+  setToTime,
 }: createTimeSlotProp) {
-  const createTimeSlots = (startHour: any, endHour: any) => {
-    const times = [];
-    for (let hour = startHour; hour <= endHour; hour++) {
-      const formattedHour = hour < 10 ? `0${hour}:00` : `${hour}:00`;
-      times.push(formattedHour);
-    }
-    return times;
+  const [selectedTimes, setSelectedTimes] = useState<any[]>([]);
+
+  const handlePress = (timeSlot: any) => {
+    setSelectedTimes((prev) =>
+      prev.some(
+        (selectedTime) =>
+          selectedTime["from-time"] === timeSlot["from-time"] &&
+          selectedTime["to-time"] === timeSlot["to-time"],
+      )
+        ? prev.filter(
+            (selectedTime) =>
+              selectedTime["from-time"] !== timeSlot["from-time"] ||
+              selectedTime["to-time"] !== timeSlot["to-time"],
+          )
+        : prev.length < 2
+          ? [...prev, timeSlot]
+          : prev,
+    );
   };
 
-  const times = createTimeSlots(5, 24);
-  const [startTime, setStartTime] = useState<string | null>();
-  const [endTime, setEndTime] = useState<string | null>();
-
-  const handlePress = (time: string) => {
-    if (!startTime) {
-      setStartTime(time);
-    } else if (!endTime) {
-      const startHour = parseInt(startTime.split(":")[0]);
-      const selectedHour = parseInt(time.split(":")[0]);
-
-      if (selectedHour < startHour) {
-        setEndTime(startTime);
-        setStartTime(time);
-      } else if (time === startTime) {
-        setStartTime(time);
-      } else {
-        setEndTime(time);
-      }
-    } else {
-      setStartTime(time);
-      setEndTime(null);
-    }
-  };
+  const filteredTimes = time.filter(
+    (timeSlot) => timeSlot.status === "Available",
+  );
 
   const calculateTotalHours = () => {
-    if (startTime && endTime) {
-      const startHour = parseInt(startTime.split(":")[0]);
-      const endHour = parseInt(endTime.split(":")[0]);
-      return endHour - startHour;
+    if (selectedTimes.length < 2) return 0;
+    const sortedTimes = selectedTimes.sort(
+      (a, b) =>
+        new Date(`1970-01-01T${a["from-time"]}:00`).getTime() -
+        new Date(`1970-01-01T${b["from-time"]}:00`).getTime(),
+    );
+    const start = new Date(`1970-01-01T${sortedTimes[0]["from-time"]}:00`);
+    const end = new Date(`1970-01-01T${sortedTimes[1]["to-time"]}:00`);
+    const hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+    return hours;
+  };
+
+  const calculateTotalPrice = () => {
+    if (selectedTimes.length < 2) return 0;
+    const sortedTimes = selectedTimes.sort(
+      (a, b) =>
+        new Date(`1970-01-01T${a["from-time"]}:00`).getTime() -
+        new Date(`1970-01-01T${b["from-time"]}:00`).getTime(),
+    );
+    const start = new Date(`1970-01-01T${sortedTimes[0]["from-time"]}:00`);
+    const end = new Date(`1970-01-01T${sortedTimes[1]["to-time"]}:00`);
+    const hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+    const pricePerHour = sortedTimes[0].price / 0.5;
+    const totalPrice = hours * pricePerHour;
+    return totalPrice;
+  };
+
+  const calculateFromAndEndTime = () => {
+    if (selectedTimes.length === 0) {
+      setFromTime("");
+      setToTime("");
+      return;
     }
-    return 0;
+    const sortedTimes = selectedTimes.sort(
+      (a, b) =>
+        new Date(`1970-01-01T${a["from-time"]}:00`).getTime() -
+        new Date(`1970-01-01T${b["from-time"]}:00`).getTime(),
+    );
+    setFromTime(sortedTimes[0]["from-time"]);
+    setToTime(sortedTimes[sortedTimes.length - 1]["to-time"]);
   };
 
   useEffect(() => {
-    const hours = calculateTotalHours();
-    setTotalHours(hours);
-  }, [startTime, endTime]);
-
-  useEffect(() => {
-    if (startTime && endTime) {
-      setIsChoosen(true);
-    } else {
-      setIsChoosen(false);
-    }
-  }, [startTime, endTime]);
+    setTotalHours(calculateTotalHours());
+    setTotalPrice(calculateTotalPrice());
+    calculateFromAndEndTime();
+    setIsChoosen(selectedTimes.length === 2);
+  }, [
+    selectedTimes,
+    setFromTime,
+    setToTime,
+    setTotalHours,
+    setTotalPrice,
+    setIsChoosen,
+  ]);
 
   return (
-    <View className="p-4">
-      <View className="flex flex-row flex-wrap">
-        {times.map((time) => (
+    <>
+      <View className="flex-row flex-wrap">
+        {filteredTimes.map((timeSlot) => (
           <SelectButton
-            key={time}
-            title={time}
-            onPress={() => handlePress(time)}
-            selected={time === startTime || time === endTime}
+            key={timeSlot.id}
+            title={`${timeSlot["from-time"]} - ${timeSlot["to-time"]}`}
+            onPress={() => handlePress(timeSlot)}
+            selected={selectedTimes.some(
+              (selectedTime) =>
+                selectedTime["from-time"] === timeSlot["from-time"] &&
+                selectedTime["to-time"] === timeSlot["to-time"],
+            )}
           />
         ))}
       </View>
-      <Text className="mt-4 text-lg">
-        Số giờ đã chọn: {calculateTotalHours()}
+      <Text className="pt-4 text-lg">
+        Số giờ đã chọn:
+        {selectedTimes.length === 2 ? calculateTotalHours().toFixed(1) : 0} giờ
       </Text>
-    </View>
+      <Text className="mt-2 text-lg">
+        Tổng số tiền:
+        {selectedTimes.length === 2
+          ? formatCurrency(calculateTotalPrice())
+          : formatCurrency(0)}
+      </Text>
+    </>
   );
 }

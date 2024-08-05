@@ -1,10 +1,9 @@
 import React from "react";
-import { Modal, Text, View } from "react-native";
-
+import { Text, Modal, View } from "react-native";
 import { Button } from "react-native-paper";
 
 export type ModalProps = {
-  fields: { id: string; label?: string }[];
+  fields: { id?: string; label?: string }[];
   modalVisible: boolean;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   onPress: () => void;
@@ -18,9 +17,9 @@ export default function ModalComponent({
 }: ModalProps) {
   return (
     <View className="flex-1 justify-center items-center">
-      <Modal animationType="slide" transparent={true} visible={modalVisible}>
-        <View className="flex-1 justify-center items-center">
-          <View className="bg-white rounded-lg p-3 shadow">
+      <Modal animationType="fade" transparent={true} visible={modalVisible}>
+        <View className="flex-1 justify-center items-center bg-[#0000007F]">
+          <View className="bg-white rounded-lg p-10 shadow">
             <Text className="mb-4 text-center text-2xl font-bold m-5">
               Thông tin đặt lịch
             </Text>
@@ -35,7 +34,7 @@ export default function ModalComponent({
             <View className="flex flex-row justify-center space-x-4">
               <Button className="bg-blue-500 rounded-lg" onPress={onPress}>
                 <Text className="text-white font-bold text-center">
-                  Thanh toán
+                  Đặt ngay
                 </Text>
               </Button>
               <Button

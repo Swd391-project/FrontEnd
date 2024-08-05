@@ -15,13 +15,13 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export type ModalProps = {
   modalVisible: boolean;
-  court: Court;
+  courtId: number;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function SelectBookingTypeModal({
   modalVisible,
-  court,
+  courtId,
   setModalVisible,
 }: ModalProps) {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -36,15 +36,15 @@ export default function SelectBookingTypeModal({
     switch (selectedOption) {
       case "fixed":
         setModalVisible(!modalVisible);
-        navigation.navigate("FixedSchedule", { court });
+        navigation.navigate("FixedSchedule", { courtId });
         break;
       case "day":
         setModalVisible(!modalVisible);
-        navigation.navigate("SingleDayBooking", { court });
+        navigation.navigate("SingleDayBooking", { courtId });
         break;
       case "flexible":
         setModalVisible(!modalVisible);
-        navigation.navigate("FlexibleSchedule", { court });
+        navigation.navigate("FlexibleSchedule", { courtId });
         break;
       default:
         setModalVisible(!modalVisible);
@@ -52,16 +52,18 @@ export default function SelectBookingTypeModal({
     }
   };
 
+  const isDisabled = selectedOption === null;
+
   return (
     <View className="flex-1 justify-center items-center">
-      <Modal animationType="slide" transparent={true} visible={modalVisible}>
-        <View className="flex-1 justify-center items-center">
+      <Modal animationType="fade" transparent={true} visible={modalVisible}>
+        <View className="flex-1 justify-center items-center bg-[#0000007F]">
           <View className="bg-white rounded-lg p-3 shadow">
             <Text className="mb-4 text-center text-2xl font-bold m-5">
               Chọn loại hình đặt lịch
             </Text>
             <View>
-              <Text>Chọn loại đặt lịch:</Text>
+              <Text className="text-base">Chọn loại đặt lịch:</Text>
               <SelectButton
                 title="Lịch cố định"
                 onPress={() => handlePress("fixed")}
@@ -72,15 +74,16 @@ export default function SelectBookingTypeModal({
                 onPress={() => handlePress("day")}
                 selected={selectedOption === "day"}
               />
-              <SelectButton
+              {/* <SelectButton
                 title="Lịch linh hoạt"
                 onPress={() => handlePress("flexible")}
                 selected={selectedOption === "flexible"}
-              />
+              /> */}
             </View>
             <View className="flex flex-row justify-center space-x-4">
               <Button
-                className="bg-blue-500 rounded-lg"
+                className={`bg-blue-500 rounded-lg ${isDisabled ? "opacity-50" : ""}`}
+                disabled={isDisabled}
                 onPress={handleBookNow}
               >
                 <Text className="text-white font-bold text-center">

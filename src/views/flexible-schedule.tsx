@@ -15,7 +15,7 @@ type CourtDetailProps = {
 };
 
 export default function FlexibleSchedule({ route }: CourtDetailProps) {
-  const { court } = route.params;
+  // const { court } = route.params;
 
   return (
     <View>
